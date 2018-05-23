@@ -16,7 +16,8 @@ const int arraySize = sizeof(pins)/sizeof(int);
 Servo controllers[arraySize];
 
 int pwm(int input) {
-  int result = input * 5 + 1500;
+  // int result = input * 5 + 1500;
+  int result = input * 20 + 1500;
   return result;
 }
 
@@ -60,7 +61,7 @@ void motor(String input) {
   }
 
   for (int i=0; i<2; i++)
-    motorPWM[i] = motors[i];
+    motorPWM[i] = pwm(motors[i]);
 }
 
 void handleInput(String input) {
