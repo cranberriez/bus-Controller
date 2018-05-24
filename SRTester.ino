@@ -5,7 +5,6 @@
 //User configuration:
 int percent = 0;  // between -100 and 100, indicates boot speed
 
-int motorPWM[] = {1500, 1500};
 int pins[] = {5, 6}; // Left Motor, Right Motor  (L:5, R:6)
 int maxSpeed = 40;
 int leftMotor = 0;
@@ -14,6 +13,29 @@ int motors[] = {leftMotor, rightMotor};
 
 const int arraySize = sizeof(pins)/sizeof(int);
 Servo controllers[arraySize];
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Ready For Input\n");
+  controllers[0].attach(pins[0]);
+  controllers[1].attach(pins[1]);
+  delay(1000);
+  Serial.println("Input Command and Output PWM\n");
+}
+
+void loop() {
+  controllers[0].writeMicroseconds(pwm(leftMotor));
+  controllers[1].writeMicroseconds(pwm(rightMotor));
+  Serial.println(pwm(leftMotor));
+
+  if (Serial.available()) {
+    int input = Serial.read();
+    if (input != 13) {
+      Serial.println(input);
+      handleInput(input);
+    }
+  }
+}
 
 int pwm(int input) {
   // int result = input * 5 + 1500;
@@ -59,40 +81,19 @@ void motor(String input) {
     rightMotor = 0;
     leftMotor = 0;
   }
-
-  for (int i=0; i<2; i++)
-    motorPWM[i] = pwm(motors[i]);
 }
 
-void handleInput(String input) {
-  if (input.equals("w")) motor("forward");
-  else if (input.equals("a")) motor("left");
-  else if (input.equals("d")) motor("right");
-  else if (input.equals("s")) motor("backward");
-  else if (input.equals("ex")) motor("stop"); // X
-  else if (input.equals("sq")); // Square
-  else if (input.equals("ci")); // Circle
-  else if (input.equals("tr")); // Triangle
-  else if (input.equals("select")); // Select
-  else if (input.equals("start")); // Start
-}
-
-void setup() {
-  Serial1.begin(9600);
-  Serial1.println("Ready For Input\n");
-  controllers[0].attach(pins[0]);
-  controllers[1].attach(pins[1]);
-  delay(1000);
-  Serial1.println("Input Command and Output PWM\n");
-}
-
-void loop() {
-
-  for (int i=0; i<2; i++)
-    controllers[i].writeMicroseconds(motorPWM[i]);
-
-  if (Serial1.available() > 1) {
-    String input = Serial1.readString();
-    handleInput(input);
-  }
+void handleInput(float input) {
+  if (input == 119) motor("forward"); // w
+  else if (input == 97) motor("left"); // a
+  else if (input == 100) motor("right"); // d
+  else if (input == 115) motor("back"); // s
+  else if (input == 120) motor("stop"); // X x
+  else if (input == 113); // Square q
+  else if (input == 99); // Circle c
+  else if (input == 116); // Triangle t
+  else if (input == 108); // Select l
+  else if (input == 114); // Start r
+  else if (input == 13);
+  else Serial.println("Broken");
 }
