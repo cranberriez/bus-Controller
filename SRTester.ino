@@ -2,13 +2,15 @@
 
 #include <Servo.h>
 
-//User  `1  qqyusdfazxgyconfiguration:
+//User configuration:
 int percent = 0;  // between -100 and 100, indicates boot speed
 
+int ledPins[] = {1,3,4};
 int pins[] = {5, 6}; // Left Motor, Right Motor  (L:5, R:6)
 int maxSpeed = 40;
 int leftMotor = 0;
 int rightMotor = 0;
+int stopMode = 0;
 int motors[] = {leftMotor, rightMotor};
 
 const int arraySize = sizeof(pins)/sizeof(int);
@@ -24,10 +26,20 @@ void setup() {
 }
 
 void loop() {
+  // Motor writing and movement
   controllers[0].writeMicroseconds(pwm(leftMotor));
   controllers[1].writeMicroseconds(pwm(rightMotor));
-  Serial.println(pwm(leftMotor));
 
+  // If i don't get to this, make one of the handle inputs set a variable of the leds to 1 or 2 or whatever
+  // And here do an if statement for if the variable is something, do something with the lights
+  
+  if (stopMode == 1) {
+    //flashing yellow then red + stop sign, then turn off.
+    
+  }
+  
+
+  // Bluetooth and serial input handling
   if (Serial.available()) {
     int input = Serial.read();
     if (input != 13) {
@@ -35,11 +47,11 @@ void loop() {
       handleInput(input);
     }
   }
+
 }
 
 int pwm(int input) {
-  // int result = input * 5 + 1500;
-  int result = input * 20 + 1500;
+  int result = input * 5 + 1500;
   return result;
 }
 
@@ -82,7 +94,6 @@ void motor(String input) {
   else if (input.equals("left")) { // Movement is like turning the wheel of a car
     rightMotor += 1;
     leftMotor -= 1;
-  }
 
   else if (input.equals("right")) {
     leftMotor += 1;
@@ -101,7 +112,7 @@ void handleInput(float input) {
   else if (input == 100) motor("right"); // d
   else if (input == 115) motor("back"); // s
   else if (input == 120) motor("stop"); // X x
-  else if (input == 113); // Square q
+  else if (input == 113) stopMode = 1; // Square q
   else if (input == 99); // Circle c
   else if (input == 116); // Triangle t
   else if (input == 108); // Select l
