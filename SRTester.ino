@@ -2,7 +2,7 @@
 
 #include <Servo.h>
 
-//User configuration:
+//User  `1  qqyusdfazxgyconfiguration:
 int percent = 0;  // between -100 and 100, indicates boot speed
 
 int pins[] = {5, 6}; // Left Motor, Right Motor  (L:5, R:6)
@@ -47,8 +47,14 @@ void motor(String input) {
   if (input.equals("forward")) {
     if (leftMotor != rightMotor) { // If we're turning at all (motors not going same speed)
       if (leftMotor > rightMotor) { // Set the slower motor to go as fast as the faster motor
-        leftMotor = rightMotor + 1;
-        rightMotor = leftMotor;
+        if (rightMotor <= -1 && leftMotor > 0) {
+          leftMotor = 1;
+          rightMotor = 1;
+        }
+        else {
+          leftMotor = rightMotor + 1;
+          rightMotor = leftMotor;
+        }
       }
       else {
         rightMotor = leftMotor + 1;
