@@ -47,9 +47,11 @@ void motor(String input) {
   if (input.equals("forward")) {
     if (leftMotor != rightMotor) { // If we're turning at all (motors not going same speed)
       if (leftMotor > rightMotor) { // Set the slower motor to go as fast as the faster motor
+        leftMotor = rightMotor + 1;
         rightMotor = leftMotor;
       }
       else {
+        rightMotor = leftMotor + 1;
         leftMotor = rightMotor;
       }
     }
@@ -58,6 +60,7 @@ void motor(String input) {
       leftMotor += 1;
     }
   }
+
   else if (input.equals("back")) {
     if (leftMotor != rightMotor) { // If we're turning at all (motors not going same speed)
       // Set the slower motor to go as fast as the faster motor (because they are negatives the faster motor is less than the slower motor)
@@ -69,14 +72,17 @@ void motor(String input) {
       leftMotor -= 1;
     }
   }
+
   else if (input.equals("left")) { // Movement is like turning the wheel of a car
-    if (rightMotor < 0 || leftMotor < 0) rightMotor -= 1; // Reversing we want negative because speed is negative
-    else rightMotor += 1;
+    rightMotor += 1;
+    leftMotor -= 1;
   }
+
   else if (input.equals("right")) {
-    if (rightMotor < 0 || leftMotor < 0) leftMotor -= 1;
-    else leftMotor += 1;
+    leftMotor += 1;
+    rightMotor -= 1;
   }
+
   else if (input.equals("stop")) {
     rightMotor = 0;
     leftMotor = 0;
