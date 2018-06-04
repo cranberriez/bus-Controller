@@ -2,6 +2,8 @@
 
 #include <Servo.h>
 
+Servo stopservo;
+
 //User configuration:
 int percent = 0;  // between -100 and 100, indicates boot speed
 
@@ -13,10 +15,16 @@ int rightMotor = 0;
 int stopMode = 0;
 int motors[] = {leftMotor, rightMotor};
 
+int servo = 1;
+int signsOut = 0;
+int delay_time = 230;
+
 const int arraySize = sizeof(pins)/sizeof(int);
 Servo controllers[arraySize];
 
 void setup() {
+  stopservo.attach(13);
+  
   Serial.begin(9600);
   Serial.println("Ready For Input\n");
   controllers[0].attach(pins[0]);
@@ -26,6 +34,10 @@ void setup() {
 }
 
 void loop() {
+  if (servo == 1) {
+    moveSigns();
+  }
+  
   // Motor writing and movement
   controllers[0].writeMicroseconds(pwm(leftMotor));
   controllers[1].writeMicroseconds(pwm(rightMotor));
@@ -53,6 +65,28 @@ void loop() {
 int pwm(int input) {
   int result = input * 5 + 1500;
   return result;
+}
+
+void moveSigns() {
+  if (signsOut == 0) { // If signs are closed
+    signsOut = 1;
+    servo = 0;
+    stopservo.write(91);
+    delay(delay_time);
+    stopservo.write(1);
+    delay(delay_time);
+    stopservo.write(91);
+  }
+  
+  else if (signsOut == 1) { // If signs are open (else if)
+    signsOut = 0;
+    servo = 0;
+    stopservo.write(91);
+    delay(delay_time);
+    stopservo.write(181);
+    delay(delay_time);
+    stopservo.write(91);
+  }
 }
 
 void motor(String input) {
@@ -112,7 +146,7 @@ void handleInput(float input) {
   else if (input == 100) motor("right"); // d
   else if (input == 115) motor("back"); // s
   else if (input == 120) motor("stop"); // X x
-  else if (input == 113) stopMode = 1; // Square q
+  else if (input == 113) servo = 1; // Square q
   else if (input == 99); // Circle c
   else if (input == 116); // Triangle t
   else if (input == 108); // Select l
