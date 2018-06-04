@@ -12,7 +12,6 @@ int pins[] = {5, 6}; // Left Motor, Right Motor  (L:5, R:6)
 int maxSpeed = 40;
 int leftMotor = 0;
 int rightMotor = 0;
-int stopMode = 0;
 int motors[] = {leftMotor, rightMotor};
 
 int servo = 1;
@@ -44,12 +43,6 @@ void loop() {
 
   // If i don't get to this, make one of the handle inputs set a variable of the leds to 1 or 2 or whatever
   // And here do an if statement for if the variable is something, do something with the lights
-  
-  if (stopMode == 1) {
-    //flashing yellow then red + stop sign, then turn off.
-    
-  }
-  
 
   // Bluetooth and serial input handling
   if (Serial.available()) {
@@ -59,7 +52,6 @@ void loop() {
       handleInput(input);
     }
   }
-
 }
 
 int pwm(int input) {
