@@ -120,7 +120,8 @@ void motor(String input) {
   else if (input.equals("left")) { // Movement is like turning the wheel of a car
     rightMotor += 1;
     leftMotor -= 1;
-
+  }
+  
   else if (input.equals("right")) {
     leftMotor += 1;
     rightMotor -= 1;
